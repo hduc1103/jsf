@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+<cc:interface>
+	<cc:attribute name="value" required="true" />
+	<cc:attribute name="type" required="true" />
+	<cc:attribute name="requiredInput" type="java.lang.Boolean"
+		default="fasle" />
+	<cc:attribute name="requiredMessageInput" type="java.lang.String"
+		default="Dont leave it blank" />
+</cc:interface>
+
+<cc:implementation>
+	<h:inputText id="inputHarvey" value="#{cc.attrs.value}"
+		validator="#{employeeBean[cc.attrs.type.concat('Validator')]}"
+		required="#{cc.attrs.requiredInput}"
+		requiredMessage="#{cc.attrs.requiredMessageInput}">z
+		<f:converter converterId="#{cc.attrs.type.concat('Converter')}" />
+		<f:ajax event="blur" execute="inputHarvey"
+			render="inputHarvey compositeMessage" />
+	</h:inputText>
+	<h:message id="compositeMessage" for="inputHarvey" style="color:red;" />
+</cc:implementation>
+</html>

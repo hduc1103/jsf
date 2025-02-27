@@ -1,0 +1,9 @@
+/.metadata/
+/RemoteSystemsTempFiles
+/target/
+/.svn/
+.tern-project
+.project
+.classpath
+/.settings
+/.git
