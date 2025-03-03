@@ -1,5 +1,6 @@
 package service.impl;
 
+import java.sql.Connection;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.inject.Named;
 
 import model.Employee;
 import dao.EmployeeDAO;
+import interceptor.Loggable;
 import service.EmployeeService;
 
 @Named("employeeService")
@@ -18,9 +20,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Inject
 	private EmployeeDAO employeeDAO;
-
+	
 	@Override
-	public void addEmployee(Employee employee) {
+	@Loggable
+	public void addEmployee(Connection conn, Employee employee) {
 		Calendar now = Calendar.getInstance();
 		Calendar dob = Calendar.getInstance();
 		dob.setTime(employee.getDob());
@@ -32,21 +35,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 
 		employee.setAge(age);
-		employeeDAO.addEmployee(employee);
+		employeeDAO.addEmployee(conn, employee);
 	}
 
 	@Override
-	public void deleteEmployee(String code) {
-		employeeDAO.deleteEmployee(code);
+	@Loggable
+	public void deleteEmployee(Connection conn, String code) {
+		employeeDAO.deleteEmployee(conn, code);
 	}
 
 	@Override
-	public List<Employee> getAllEmployees() {
-		return employeeDAO.getAllEmployees();
+	@Loggable
+	public List<Employee> getAllEmployees(Connection conn) {
+		return employeeDAO.getAllEmployees(conn);
 	}
 
 	@Override
-	public void updateEmployee(Employee newEmployeeData) {
+	@Loggable
+	public void updateEmployee(Connection conn, Employee newEmployeeData) {
 		Calendar now = Calendar.getInstance();
 		Calendar dob = Calendar.getInstance();
 		dob.setTime(newEmployeeData.getDob());
@@ -58,18 +64,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 
 		newEmployeeData.setAge(age);
-		employeeDAO.updateEmployee(newEmployeeData);
+		employeeDAO.updateEmployee(conn, newEmployeeData);
 	}
 
 	@Override
-	public Employee searchByCode(String code) {
-		Employee employee = employeeDAO.getEmployeeByCode(code);
+	@Loggable
+	public Employee searchByCode(Connection conn, String code) {
+		Employee employee = employeeDAO.getEmployeeByCode(conn, code);
 		return employee;
 	}
 
 	@Override
-	public boolean checkAge(Date dob) {
-		return employeeDAO.checkAge(dob);
+	@Loggable
+	public boolean checkAge(Connection conn, Date dob) {
+		return employeeDAO.checkAge(conn, dob);
 	}
 
 }

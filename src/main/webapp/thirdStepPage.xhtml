@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:harvey="http://xmlns.jcp.org/jsf/composite/components">
+<h:head>
+	<h:outputScript library="javax.faces" name="jsf.js" target="head" />
+
+</h:head>
+<h:form>
+	<h:panelGrid columns="2">
+		<h:outputLabel for="addDob" value="Date of Birth:" />
+		<harvey:input id="addDob" type="date"
+			value="#{employeeManagement.newEmployee.dob}" requiredInput="true"
+			requiredMessageInput="Date of birth is required" />
+	</h:panelGrid>
+
+	<h:commandButton value="Save"
+		action="#{employeeManagement.newAddEmployee}" />
+	<h:commandButton value="Cancel"
+		action="#{employeeManagement.newCancel}" style="cursor:pointer;"
+		immediate="true" />
+
+</h:form>
+</html>

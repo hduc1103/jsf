@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:harvey="http://xmlns.jcp.org/jsf/composite/components">
+<h:head>
+	<h:outputScript library="javax.faces" name="jsf.js" target="head" />
+
+</h:head>
+<h:body>
+	<h:form>
+		<h:panelGrid columns="2">
+			<h:outputLabel for="addCode" value="Code:" />
+			<f:ajax event="blur" execute="addCode" render="addCode errorMessage">
+				<harvey:input id="addCode" type="code"
+					value="#{employeeManagement.newEmployee.code}" requiredInput="true"
+					requiredMessageInput="Code is required" />
+			</f:ajax>
+			<h:message id="errorMessage" for="addCode" style="color:red;" />
+		</h:panelGrid>
+		<h:commandButton value="Next" action="secondStepPage" />
+		<h:commandButton value="Cancel"
+			action="#{employeeManagement.newCancel}" style="cursor:pointer;"
+			immediate="true" />
+	</h:form>
+
+</h:body>
+</html>

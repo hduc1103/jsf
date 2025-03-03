@@ -8,16 +8,16 @@
 	<cc:attribute name="value" required="true" />
 	<cc:attribute name="type" required="true" />
 	<cc:attribute name="requiredInput" type="java.lang.Boolean"
-		default="fasle" />
+		default="false" />
 	<cc:attribute name="requiredMessageInput" type="java.lang.String"
 		default="Dont leave it blank" />
 </cc:interface>
 
 <cc:implementation>
 	<h:inputText id="inputHarvey" value="#{cc.attrs.value}"
-		validator="#{employeeBean[cc.attrs.type.concat('Validator')]}"
+		validator="#{employeeManagement[cc.attrs.type.concat('Validator')]}"
 		required="#{cc.attrs.requiredInput}"
-		requiredMessage="#{cc.attrs.requiredMessageInput}">z
+		requiredMessage="#{cc.attrs.requiredMessageInput}">
 		<f:converter converterId="#{cc.attrs.type.concat('Converter')}" />
 		<f:ajax event="blur" execute="inputHarvey"
 			render="inputHarvey compositeMessage" />

@@ -5,15 +5,16 @@
 	xmlns:harvey="http://xmlns.jcp.org/jsf/composite/components"
 	xmlns:nharvey="http://harvey.com">
 <h:head>
-<h:outputScript library="javax.faces" name="jsf.js" target="head" />
+	<h:outputScript library="javax.faces" name="jsf.js" target="head" />
 
 	<title>Employee List</title>
 </h:head>
 <h:body>
 	<h:form>
-		<h:panelGroup rendered="#{employeeBean.showList}">
+		<h:panelGroup rendered="#{employeeManagement.showList}">
 			<h1>Employee List</h1>
-			<h:dataTable value="#{employeeBean.employees}" var="emp" border="3"
+			<h:dataTable value="#{employeeManagement.employees}" var="emp"
+				border="3"
 				style="width: 100%; border-collapse: none; text-align: left;">
 
 				<h:column style="width: 10%;">
@@ -39,7 +40,7 @@
 						<h:outputText value="Date of Birth" />
 					</f:facet>
 					<h:outputText value="#{emp.dob}">
-						<f:convertDateTime type="date" dateStyle="long" />
+						<f:converter converterId="dateConverter" />
 					</h:outputText>
 				</h:column>
 				<h:column style="width: 10%;">
@@ -47,7 +48,7 @@
 						<h:outputText value="Action 1" />
 					</f:facet>
 					<h:commandButton value="Delete"
-						actionListener="#{employeeBean.deleteEmployee(emp.code)}"
+						actionListener="#{employeeManagement.deleteEmployee(emp.code)}"
 						style="color: red;  width: 100%; padding: 5px; border: none;cursor: pointer;">
 						<f:ajax render="@form" />
 					</h:commandButton>
@@ -57,106 +58,117 @@
 						<h:outputText value="Action 2" />
 					</f:facet>
 					<h:commandButton value="Update"
-						actionListener="#{employeeBean.toggleUpdate(emp)}"
+						actionListener="#{employeeManagement.toggleUpdate(emp)}"
 						style="color: blue; width: 100%; padding: 5px; border: none;cursor: pointer;">
 						<f:ajax render="@form" />
 					</h:commandButton>
 				</h:column>
 			</h:dataTable>
-			<h:commandButton value="Sort by name"
-				actionListener="#{employeeBean.sortByName()}"
-				style="cursor:pointer;">
-				<f:ajax render="@form" />
-			</h:commandButton>
-			<h:commandButton value="Sort by age"
-				actionListener="#{employeeBean.sortByAge()}" style="cursor:pointer;">
-				<f:ajax render="@form" />
-			</h:commandButton>
-			<h:commandButton value="Sort by date of birth"
-				actionListener="#{employeeBean.sortByDob()}" style="cursor:pointer;">
-				<f:ajax render="@form" />
-			</h:commandButton>
-			<h:commandButton value="Refresh"
-				actionListener="#{employeeBean.refresh()}" style="cursor:pointer;">
-				<f:ajax render="@form" />
-			</h:commandButton>
-			<h:commandButton value="Add"
-				actionListener="#{employeeBean.toggleAdd()}" style="cursor:pointer">
-				<f:ajax render="@form" />
-			</h:commandButton>
-			<h:commandButton value="Add New"
-				actionListener="#{employeeBean.ntoggleAdd()}" style="cursor:pointer">
-				<f:ajax render="@form" />
-			</h:commandButton>
+			<h:panelGrid columns="7">
+				<h:commandButton value="Sort by name"
+					actionListener="#{employeeManagement.sortByName()}"
+					style="cursor:pointer;">
+					<f:ajax render="@form" />
+				</h:commandButton>
+				<h:commandButton value="Sort by age"
+					actionListener="#{employeeManagement.sortByAge()}"
+					style="cursor:pointer;">
+					<f:ajax render="@form" />
+				</h:commandButton>
+				<h:commandButton value="Sort by date of birth"
+					actionListener="#{employeeManagement.sortByDob()}"
+					style="cursor:pointer;">
+					<f:ajax render="@form" />
+				</h:commandButton>
+				<h:commandButton value="Refresh"
+					actionListener="#{employeeManagement.refresh()}"
+					style="cursor:pointer;">
+					<f:ajax render="@form" />
+				</h:commandButton>
+				<h:commandButton value="Add"
+					actionListener="#{employeeManagement.toggleAdd()}"
+					style="cursor:pointer">
+					<f:ajax render="@form" />
+				</h:commandButton>
+				<h:commandButton value="Add New"
+					actionListener="#{employeeManagement.ntoggleAdd()}"
+					style="cursor:pointer">
+					<f:ajax render="@form" />
+				</h:commandButton>
+				<h:commandButton value="Add New 2"
+					action="#{employeeManagement.firstStep()}" style="cursor:pointer">
+				</h:commandButton>
+			</h:panelGrid>
 		</h:panelGroup>
-		<h:panelGroup rendered="#{employeeBean.showAdd}">
+		<h:panelGroup rendered="#{employeeManagement.showAdd}">
 			<h2>Add New Employee</h2>
 			<h:panelGrid columns="2">
 				<h:outputLabel for="addCode" value="Code:" />
 				<harvey:input id="addCode" type="code"
-					value="#{employeeBean.newEmployee.code}" requiredInput="true"
+					value="#{employeeManagement.newEmployee.code}" requiredInput="true"
 					requiredMessageInput="Code is required" />
 				<h:outputLabel for="addName" value="Name:" />
 				<harvey:input id="addName" type="name"
-					value="#{employeeBean.newEmployee.name}" requiredInput="true"
+					value="#{employeeManagement.newEmployee.name}" requiredInput="true"
 					requiredMessageInput="Name is required" />
 				<h:outputLabel for="addDob" value="Date of Birth:" />
 				<harvey:input id="addDob" type="date"
-					value="#{employeeBean.newEmployee.dob}" requiredInput="true"
+					value="#{employeeManagement.newEmployee.dob}" requiredInput="true"
 					requiredMessageInput="Date of birth is required" />
-				<h:commandButton id="addEmployeeButton1" value="Add Employee" style="cursor:pointer;"
-					action="#{employeeBean.addEmployee}">
+				<h:commandButton id="addEmployeeButton1" value="Add Employee"
+					style="cursor:pointer;" action="#{employeeManagement.addEmployee}">
 					<f:ajax render="@form" />
 				</h:commandButton>
 				<h:commandButton value="Cancel" style="cursor:pointer;"
 					immediate="true">
-					<f:ajax listener="#{employeeBean.cancelAdd()}" render="@form" />
+					<f:ajax listener="#{employeeManagement.cancelAdd()}" render="@form" />
 				</h:commandButton>
 			</h:panelGrid>
 		</h:panelGroup>
-		<h:panelGroup rendered="#{employeeBean.newShowAdd}">
+		<h:panelGroup rendered="#{employeeManagement.newShowAdd}">
 			<h2>Add New Employee</h2>
 			<h:panelGrid columns="2">
 				<h:outputLabel for="newAddCode" value="Code:" />
 				<nharvey:input type="code" id="newAddCode"
-					value="#{employeeBean.newEmployee.code}" requiredInput="true"
+					value="#{employeeManagement.newEmployee.code}" requiredInput="true"
 					requiredMessageInput="This field is mandatory" />
 				<h:outputLabel for="newAddName" value="Name:" />
 				<nharvey:input type="name" id="newAddName"
-					value="#{employeeBean.newEmployee.name}" requiredInput="true"
+					value="#{employeeManagement.newEmployee.name}" requiredInput="true"
 					requiredMessageInput="This field is mandatory" />
 				<h:outputLabel for="newAddDob" value="Date of Birth:" />
 				<nharvey:input type="date" id="newAddDob"
-					value="#{employeeBean.newEmployee.dob}" requiredInput="true"
-					requiredMessageInput="This field is mandatory"/>
+					value="#{employeeManagement.newEmployee.dob}" requiredInput="true"
+					requiredMessageInput="This field is mandatory" />
 				<h:commandButton value="Add Employee" style="cursor:pointer;"
-					action="#{employeeBean.addEmployee}">
+					action="#{employeeManagement.addEmployee}">
 					<f:ajax render="@form" />
 				</h:commandButton>
 				<h:commandButton value="Cancel" style="cursor:pointer;"
 					immediate="true">
-					<f:ajax listener="#{employeeBean.cancelNewAdd()}" render="@form" />
+					<f:ajax listener="#{employeeManagement.cancelNewAdd()}"
+						render="@form" />
 				</h:commandButton>
 			</h:panelGrid>
 		</h:panelGroup>
-		<h:panelGroup rendered="#{employeeBean.showUpdate}">
-			<h2>Update #{employeeBean.curEmployee.code}</h2>
+		<h:panelGroup rendered="#{employeeManagement.showUpdate}">
+			<h2>Update #{employeeManagement.curEmployee.code}</h2>
 			<h:panelGrid columns="2">
 				<h:outputLabel for="updateName" value="Name:" />
 				<harvey:input id="updateName" type="name"
-					value="#{employeeBean.curEmployee.name}" requiredInput="true"
+					value="#{employeeManagement.curEmployee.name}" requiredInput="true"
 					requiredMessageInput="Name is required" />
 				<h:outputLabel for="updateDob" value="Date of Birth:" />
 				<harvey:input id="updateDob" type="date"
-					value="#{employeeBean.curEmployee.dob}" requiredInput="true"
+					value="#{employeeManagement.curEmployee.dob}" requiredInput="true"
 					requiredMessageInput="Date of birth is required" />
 				<h:commandButton value="Update Employee"
-					actionListener="#{employeeBean.updateEmployee}"
+					actionListener="#{employeeManagement.updateEmployee}"
 					style="cursor:pointer;">
 					<f:ajax render="@form" execute="updateName updateDob" />
 				</h:commandButton>
 				<h:commandButton value="Cancel"
-					actionListener="#{employeeBean.cancelUpdate()}"
+					actionListener="#{employeeManagement.cancelUpdate()}"
 					style="cursor:pointer;" immediate="true">
 					<f:ajax render="@form" />
 				</h:commandButton>

@@ -1,20 +1,21 @@
 package dao;
 
+import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
 
 import model.Employee;
 
 public interface EmployeeDAO {
-	void addEmployee(Employee employee);
+	void addEmployee(Connection conn, Employee employee);
 
-	void updateEmployee(Employee employee);
+	void updateEmployee(Connection conn, Employee employee);
 
-	void deleteEmployee(String code);
+	void deleteEmployee(Connection conn, String code);
 
-	List<Employee> getAllEmployees();
+	List<Employee> getAllEmployees(Connection conn);
 
-	Employee getEmployeeByCode(String code);
+	Employee getEmployeeByCode(Connection conn, String code);
 	
-	boolean checkAge(Date dob);
+	boolean checkAge(Connection conn, Date dob);
 }

@@ -64,7 +64,7 @@ public class HarveyInput extends HtmlInputText {
 	    messageId.append(clientId).append(":").append("message");
 
 	    StringBuilder jsFunction = new StringBuilder();
-	    jsFunction.append("mojarra.ab(this, event, 'valueChange', '")
+	    jsFunction.append("mojarra.ab(this, event, 'blur', '")
 	              .append(clientId)
 	              .append("', '")
 	              .append(clientId)
@@ -78,7 +78,6 @@ public class HarveyInput extends HtmlInputText {
 	    writer.writeAttribute("id", messageId.toString(), "id");
 	    writer.writeAttribute("for", clientId.toString(), "for");
 	    writer.writeAttribute("style", "color:red;", null);
-
 	}
     
     @Override
@@ -119,7 +118,7 @@ public class HarveyInput extends HtmlInputText {
 
         String converterType = (String) getAttributes().get("type");
         String converterName = converterType + "Converter";
-        Converter converter = context.getApplication().createConverter(converterName);
+        Converter<?> converter = context.getApplication().createConverter(converterName);
 
         if (converter == null) {
             return submittedValue;
@@ -139,11 +138,9 @@ public class HarveyInput extends HtmlInputText {
 
         if (Boolean.TRUE.equals(required) && (value == null || value.toString().isEmpty())) {
             String message = (String) getAttributes().get("requiredMessageInput");
-            if (message == null || message.isEmpty()) {
-                message = "This field is required.";
-            }
             throw new ValidatorException(new FacesMessage(message));
         }
+        
         StringBuilder validatorName = new StringBuilder();
         validatorName.append((String) getAttributes().get("type")).append("Validator");       
         ELContext elContext = context.getELContext();

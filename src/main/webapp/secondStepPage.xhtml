@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:harvey="http://xmlns.jcp.org/jsf/composite/components">
+<h:head>
+	<h:outputScript library="javax.faces" name="jsf.js" target="head" />
+
+</h:head>
+<h:form>
+	<h:panelGrid columns="2">
+		<h:outputLabel for="addName" value="Name:" />
+		<harvey:input id="addName" type="name"
+			value="#{employeeManagement.newEmployee.name}" requiredInput="true"
+			requiredMessageInput="Name is required" />
+	</h:panelGrid>
+	<h:commandButton value="Next" action="thirdStepPage" />
+	<h:commandButton value="Cancel"
+		action="#{employeeManagement.newCancel}" style="cursor:pointer;"
+		immediate="true" />
+
+</h:form>
+</html>

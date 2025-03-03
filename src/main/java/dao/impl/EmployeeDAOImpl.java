@@ -12,38 +12,37 @@ import java.util.List;
 import exception.EmployeeException;
 import model.Employee;
 import dao.EmployeeDAO;
-import util.DatabaseUtil;
 
 public class EmployeeDAOImpl implements EmployeeDAO {
+	
 	@Override
-	public void addEmployee(Employee employee) {
-		String query = "INSERT INTO Mt_employee (employee_code, employee_name, employee_age, date_of_birth) VALUES (?, ?, ?, ?)";
+	public void addEmployee(Connection conn, Employee employee) {
+	    String query = "INSERT INTO Mt_employee (employee_code, employee_name, employee_age, date_of_birth) VALUES (?, ?, ?, ?)";
 
-		try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+	    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+	        stmt.setString(1, employee.getCode());
+	        stmt.setString(2, employee.getName());
+	        stmt.setInt(3, employee.getAge());
+	        stmt.setDate(4, new java.sql.Date(employee.getDob().getTime()));
 
-			stmt.setString(1, employee.getCode());
-			stmt.setString(2, employee.getName());
-			stmt.setInt(3, employee.getAge());
-			stmt.setDate(4, new java.sql.Date(employee.getDob().getTime()));
-
-			int rowsAffected = stmt.executeUpdate();
-			if (rowsAffected > 0) {
-				System.out.println("Employee with code, name " + employee.getCode() + " " + employee.getName()
-						+ " was added successfully!");
-			} else {
-				throw new EmployeeException("Failed to add employee " + employee.getName());
-			}
-
-		} catch (SQLException e) {
-			throw new EmployeeException("Database error while adding employee: " + e.getMessage(), e);
-		}
+	        int rowsAffected = stmt.executeUpdate();
+	        if (rowsAffected > 0) {
+	            System.out.println("Employee with code " + employee.getCode() + " and name " + employee.getName() + " was added successfully!");
+	        } else {
+	            throw new EmployeeException("Failed to add employee " + employee.getName());
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace(); 
+	        throw new EmployeeException("Database error while adding employee: " + e.getMessage());
+	    }
 	}
 
+
 	@Override
-	public void updateEmployee(Employee newEmployeeData) {
+	public void updateEmployee(Connection conn, Employee newEmployeeData) {
 		String query = "UPDATE Mt_employee SET employee_name = ?, employee_age = ?, date_of_birth = ? WHERE employee_code = ?";
 
-		try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+		try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
 			stmt.setString(1, newEmployeeData.getName());
 			stmt.setInt(2, newEmployeeData.getAge());
@@ -64,9 +63,9 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	}
 
 	@Override
-	public void deleteEmployee(String code) {
+	public void deleteEmployee(Connection conn, String code) {
 		String query = "DELETE FROM Mt_employee WHERE employee_code = ?";
-		try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+		try (PreparedStatement stmt = conn.prepareStatement(query)) {
 			stmt.setString(1, code);
 			int rowsAffected = stmt.executeUpdate();
 			if (rowsAffected > 0) {
@@ -80,12 +79,11 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	}
 
 	@Override
-	public List<Employee> getAllEmployees() {
+	public List<Employee> getAllEmployees(Connection conn) {
 		List<Employee> employeeList = new ArrayList<>();
 		String query = "SELECT * FROM Mt_employee";
 
-		try (Connection conn = DatabaseUtil.getConnection();
-				PreparedStatement stmt = conn.prepareStatement(query);
+		try (PreparedStatement stmt = conn.prepareStatement(query);
 				ResultSet rs = stmt.executeQuery()) {
 			while (rs.next()) {
 				employeeList.add(new Employee(rs.getString("employee_code"), rs.getString("employee_name"),
@@ -99,11 +97,11 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	}
 
 	@Override
-	public Employee getEmployeeByCode(String code) {
+	public Employee getEmployeeByCode(Connection conn, String code) {
 		String query = "SELECT * FROM Mt_employee WHERE employee_code = ?";
 		Employee employee = null;
 
-		try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+		try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
 			stmt.setString(1, code);
 			try (ResultSet rs = stmt.executeQuery()) {
@@ -123,7 +121,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	}
 
 	@Override
-	public boolean checkAge(Date edob) {
+	public boolean checkAge(Connection conn, Date edob) {
 		Calendar now = Calendar.getInstance();
 		Calendar dob = Calendar.getInstance();
 		dob.setTime(edob);
